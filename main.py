@@ -3,7 +3,7 @@ import time
 #TODO: must make sure all files are there. Ensure files exist first
 
 #Receive - RC | Return - RT
-
+#Hello
 # region Utility
 def clearConsole():
     cmd = "clear"
@@ -140,7 +140,7 @@ def db_registerAccount(username, password): #return false if can't register
         return False
 
     account = [username,password]
-    db_addRecord('Accounts.txt', account)
+    db_appendRecord('Accounts.txt', account)
     return True
 
 # endregion
