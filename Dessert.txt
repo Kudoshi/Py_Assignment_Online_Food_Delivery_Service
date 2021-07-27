@@ -1,0 +1,4 @@
+D001;Ayamas;25
+D002;Ice Scream;2
+D003;Ice Kacang;5
+D004;Magnus Olibois;4

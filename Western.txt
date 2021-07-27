@@ -1,0 +1,5 @@
+W001;Chicken Chop;11
+W002;Spaggethi Sauce;10
+W003;Bolognese pasta;9
+W004;Hamburger Cheese Tard;6
+W005;Poison Ivy;5

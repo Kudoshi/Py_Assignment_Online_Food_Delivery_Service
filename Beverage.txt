@@ -1,0 +1,4 @@
+B001;Beverage1;25
+B002;Beverage2;69
+B003;Nasi Lemak;25
+B005;Hebat hebat tay tay;5
