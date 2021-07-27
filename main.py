@@ -3,7 +3,7 @@ import time
 #TODO: must make sure all files are there. Ensure files exist first
 
 #Receive - RC | Return - RT
-
+#Hi i am hongwei
 # region Utility
 def clearConsole():
     cmd = "clear"
