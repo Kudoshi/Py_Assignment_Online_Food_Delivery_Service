@@ -1,16 +1,16 @@
 import os
 import time
-#TODO: must make sure all files are there. Ensure files exist first
-
 #Receive - RC | Return - RT
-#Hello
 # region Utility
+
 def clearConsole():
     cmd = "clear"
     if os.name in ('dos', 'nt'):
         cmd = "cls"
 
     os.system(cmd)
+    print("~"*70)
+
 def setupDB():
     #Create files if not exist yet
     requiredFiles = ["Accounts.txt", "Beverage.txt", "Western.txt", "Dessert.txt", "Local.txt",
@@ -23,6 +23,31 @@ def setupDB():
     with open("Cart.txt", "w") as f:
         f.close()
 
+# Prints button
+# RC: Columnt Amt (max 3), 2D buttonList [buttonTitle, buttonName], resolution(pagesize)
+# MoveleftAmt = how much to the left from the centre aligned
+def u_constructButton(columnAmt, buttonlist,moveLeftAmt=9, resolution=70):
+    gridSize = int(resolution / columnAmt)
+    leftPadding = int((gridSize / 2) - moveLeftAmt)
+    col = 0
+    text = ''
+    buttonsCnt = 0
+
+    for buttons in buttonlist:
+        buttonsCnt += 1
+        col += 1
+        text += ' ' * leftPadding + f"[{buttons[0]}] {buttons[1]}"
+
+        textLength = len(text) - (gridSize * (col - 1))
+        # Add remaining spaces of the grid
+        if textLength <= gridSize:
+            remainingSpace = gridSize - textLength
+            text += ' ' * remainingSpace
+        # Prints the text and reset the var
+        if col % columnAmt == 0 or buttonsCnt == len(buttonlist):
+            print(text)
+            text = ''
+            col = 0
 # RC: 1D list RT: string
 def list_ToSingleString(list):
     string = ''
@@ -34,6 +59,7 @@ def list_ToSingleString(list):
             string = string + str(list[i]) + ';'
 
     return string
+
 # endregion
 
 #region DATABASE
@@ -84,19 +110,34 @@ def db_deleteRecord(fileName, id):
 
     db_overwriteRecord(fileName, list)
 
-#RT: new ID
+#RT: list[ID ,indexInList]
 def db_getNewID(fileName):
+    #Get code
+    if fileName == "Beverage.txt":
+        codeID = 'B'
+    elif fileName == "Cart.txt":
+        codeID = 'C'
+    elif fileName == "Dessert.txt":
+        codeID = 'D'
+    elif fileName == "Local.txt":
+        codeID = 'L'
+    elif fileName == "Order.txt":
+        codeID = 'R'
+    elif fileName == "Western.txt":
+        codeID = 'W'
+
+    #Get auto-increment id and the index of the gap
     list = db_returnList(fileName)
-    gapNumber = -1
-    print(list[0])
-    # if gapNumber < int(list[0]):
-    #     gapNumber = line
-
-    return gapNumber
-
-print(db_getNewID("Beverage.txt"))
-
-
+    gapNumber = 1
+    index = 0
+    for records in list:
+        if gapNumber == int(records[0][1:]):
+            gapNumber += 1
+        else:
+            break
+        index += 1
+    print(index)
+    return [codeID+str(gapNumber).zfill(3), index]
 
 #RC: 1d list
 def db_appendRecord(fileName, list): #append one dimensional list without the id
@@ -128,8 +169,6 @@ def db_displayAllFoodRecord():
         db_displayFoodRecord(element[0],element[1])
         print('\n')
 
-db_displayAllFoodRecord()
-    #TODO do
 def db_registerAccount(username, password): #return false if can't register
     # ADMIN CHECK
     if username == "admin":
@@ -142,6 +181,31 @@ def db_registerAccount(username, password): #return false if can't register
     account = [username,password]
     db_appendRecord('Accounts.txt', account)
     return True
+
+
+
+
+
+
+def pg_login():
+    clearConsole()
+    print('[BACK] Back')
+    print('\n'+'LOGIN'.center(70,' '))
+    # print("="*70)
+    print("_"*70)
+
+    username = input(" "*20+ "Username: ")
+    password = input(" "*20+ "Password: ")
+
+
+
+# pg_login()
+
+
+
+
+
+
 
 # endregion
 def main():
