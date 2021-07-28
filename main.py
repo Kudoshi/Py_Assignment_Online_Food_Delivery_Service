@@ -14,6 +14,7 @@ def clearConsole():
     time.sleep(0.1)
     print("="*70)
 
+
 def setupDB():
     #Create files if not exist yet
     requiredFiles = ["Accounts.txt", "Beverage.txt", "Western.txt", "Dessert.txt", "Local.txt",
@@ -64,12 +65,14 @@ def u_constructButton(columnAmt, buttonlist,moveLeftAmt=9, resolution=70):
             text = ''
             col = 0
 
+
 #RC: message, transitionSec, nxtLineAmt
 def u_popup(message, transitionSec, nextLineAmt):
     clearConsole()
     print('\n'*nextLineAmt)
     print(message.center(70,' '))
     time.sleep(transitionSec)
+
 
 # RC: 1D list RT: string
 def list_ToSingleString(list):
@@ -203,6 +206,7 @@ def db_registerAccount(username, password): #return false if can't register
     db_appendRecord('Accounts.txt', account)
     return True
 
+
 def db_loginAccount(username,password):
     #Check admin credentials
     if username == 'admin' and password == 'SystemAdmin123':
@@ -255,6 +259,7 @@ def pg_main():
         else:
             print("Input proper value please")
             time.sleep(1)
+
 # endregion
 
 pg_main()
