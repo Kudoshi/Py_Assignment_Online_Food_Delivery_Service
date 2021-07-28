@@ -4,11 +4,14 @@ import time
 # region Utility
 
 def clearConsole():
+    print('\n'*200)
+    time.sleep(0.1)
     cmd = "clear"
     if os.name in ('dos', 'nt'):
         cmd = "cls"
 
     os.system(cmd)
+    time.sleep(0.1)
     print("="*70)
 
 def setupDB():
@@ -26,6 +29,18 @@ def setupDB():
 # Prints button
 # RC: Columnt Amt (max 3), 2D buttonList [buttonTitle, buttonName], resolution(pagesize)
 # MoveleftAmt = how much to the left from the centre aligned
+def u_insertLine(symbol='_', nextLine= True,length = 70):
+    if nextLine:
+        print('\n'+symbol*length)
+    else:
+        print(symbol*length)
+def u_insertHeader(header, backButton = True):
+    if backButton:
+        print('[BACK] Back')
+
+    print('\n'+header.center(70,' '))
+    print('_'*70+'\n')
+
 def u_constructButton(columnAmt, buttonlist,moveLeftAmt=9, resolution=70):
     gridSize = int(resolution / columnAmt)
     leftPadding = int((gridSize / 2) - moveLeftAmt)
@@ -45,7 +60,7 @@ def u_constructButton(columnAmt, buttonlist,moveLeftAmt=9, resolution=70):
             text += ' ' * remainingSpace
         # Prints the text and reset the var
         if col % columnAmt == 0 or buttonsCnt == len(buttonlist):
-            print(text)
+            print(text+'\n')
             text = ''
             col = 0
 
@@ -71,7 +86,8 @@ def list_ToSingleString(list):
 # endregion
 
 #region DATABASE
-#UTILITY
+#------UTILITY--------
+
 #RT 2D list
 def db_returnList(fileName):
     list = []
@@ -156,7 +172,7 @@ def db_appendRecord(fileName, list): #append one dimensional list without the id
 #for each string available write into the file
 
 
-#-----------END UTILITY------------
+#-----------PAGE LOGICS------------
 #Resolution of 70 spaces
 def db_displayFoodRecord(fileName, category):
     print(" "*27, f"{category}")
@@ -200,19 +216,21 @@ def db_loginAccount(username,password):
     else:
         return False
 
+# endregion
+
+#region Pages
 def pg_login():
     while True:
         clearConsole()
-        print('[BACK] Back')
-        print('\n'+'LOGIN'.center(70,' '))
-        # print("="*70)
-        print("_"*70)
+        u_insertHeader("LOGIN", False)
 
         username = input(" "*20+ "Username: ")
         password = input(" "*20+ "Password: ")
 
-        login = db_loginAccount(username,password)
+        print('\n')
+        print("-"*70)
 
+        login = db_loginAccount(username,password)
         if login:
             clearConsole()
             #To customer page
@@ -221,26 +239,25 @@ def pg_login():
         else:
             clearConsole()
             u_popup('[ERROR] INCORRECT USERNAME OR PASSWORD', 4, 4)
+            break
 
+def pg_main():
+    while True:
+        clearConsole()
+        u_insertHeader("MAIN MENU", False)
+        u_constructButton(1, [["LOGIN", 'Login'], ["REGISTER", "Register"],
+                              ['GUEST', 'View as Guest'], ['EXIT', 'Exit']])
+        u_insertLine()
+        decision = input("Input your decision: ").upper()
 
-
-
-
-
-
-pg_login()
-
-# pg_login()
-
-
-
-
-
-
-
+        if decision == "LOGIN":
+            pg_login()
+        else:
+            print("Input proper value please")
+            time.sleep(1)
 # endregion
-def main():
-    print("hey")
+
+pg_main()
 
 #
 # if __name__ == '__main__':
