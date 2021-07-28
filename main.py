@@ -9,7 +9,7 @@ def clearConsole():
         cmd = "cls"
 
     os.system(cmd)
-    print("~"*70)
+    print("="*70)
 
 def setupDB():
     #Create files if not exist yet
@@ -48,6 +48,14 @@ def u_constructButton(columnAmt, buttonlist,moveLeftAmt=9, resolution=70):
             print(text)
             text = ''
             col = 0
+
+#RC: message, transitionSec, nxtLineAmt
+def u_popup(message, transitionSec, nextLineAmt):
+    clearConsole()
+    print('\n'*nextLineAmt)
+    print(message.center(70,' '))
+    time.sleep(transitionSec)
+
 # RC: 1D list RT: string
 def list_ToSingleString(list):
     string = ''
@@ -171,9 +179,6 @@ def db_displayAllFoodRecord():
 
 def db_registerAccount(username, password): #return false if can't register
     # ADMIN CHECK
-    if username == "admin":
-        return False
-
     #Checks if value exist
     if db_searchRecord("Accounts.txt", username):
         return False
@@ -182,22 +187,48 @@ def db_registerAccount(username, password): #return false if can't register
     db_appendRecord('Accounts.txt', account)
     return True
 
+def db_loginAccount(username,password):
+    #Check admin credentials
+    if username == 'admin' and password == 'SystemAdmin123':
+        print("Admin page")
+        #to admin page
 
-
-
-
+    #Check user login credentials
+    account = db_searchRecord('Accounts.txt', username, True)
+    if account != False and account[1] == password:
+        return True
+    else:
+        return False
 
 def pg_login():
-    clearConsole()
-    print('[BACK] Back')
-    print('\n'+'LOGIN'.center(70,' '))
-    # print("="*70)
-    print("_"*70)
+    while True:
+        clearConsole()
+        print('[BACK] Back')
+        print('\n'+'LOGIN'.center(70,' '))
+        # print("="*70)
+        print("_"*70)
 
-    username = input(" "*20+ "Username: ")
-    password = input(" "*20+ "Password: ")
+        username = input(" "*20+ "Username: ")
+        password = input(" "*20+ "Password: ")
+
+        login = db_loginAccount(username,password)
+
+        if login:
+            clearConsole()
+            #To customer page
+            time.sleep(4)
+            break
+        else:
+            clearConsole()
+            u_popup('[ERROR] INCORRECT USERNAME OR PASSWORD', 4, 4)
 
 
+
+
+
+
+
+pg_login()
 
 # pg_login()
 
