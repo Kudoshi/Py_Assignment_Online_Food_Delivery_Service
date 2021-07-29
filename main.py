@@ -222,6 +222,7 @@ def db_loginAccount(username,password):
     else:
         return False
 
+
 # endregion
 
 #region Pages
@@ -304,6 +305,7 @@ def pg_main():
             pg_login()
         else:
             u_popup("[ERROR] INVALID INPUT DECISION!", 4)
+
 
 # endregion
 
