@@ -38,8 +38,10 @@ def u_insertLine(symbol='_', nextLine= True,length = 70):
 def u_insertHeader(header, backButton = True):
     if backButton:
         print('[BACK] Back')
+        print(header.center(70,' '))
+    else:
+        print('\n'+header.center(70,' '))
 
-    print('\n'+header.center(70,' '))
     print('_'*70+'\n')
 
 def u_constructButton(columnAmt, buttonlist,moveLeftAmt=9, resolution=70):
@@ -67,7 +69,7 @@ def u_constructButton(columnAmt, buttonlist,moveLeftAmt=9, resolution=70):
 
 
 #RC: message, transitionSec, nxtLineAmt
-def u_popup(message, transitionSec, nextLineAmt):
+def u_popup(message, transitionSec = 4, nextLineAmt = 4):
     clearConsole()
     print('\n'*nextLineAmt)
     print(message.center(70,' '))
@@ -178,14 +180,14 @@ def db_appendRecord(fileName, list): #append one dimensional list without the id
 #-----------PAGE LOGICS------------
 #Resolution of 70 spaces
 def db_displayFoodRecord(fileName, category):
-    print(" "*27, f"{category}")
-    print("="*70)
-    print("{:<10}{:<40}{:<20}".format('Food ID','Food Name', 'Price'))
+    print(f'{category}'.center(70))
+    print("-"*70)
+    print("{:<10}{:<45}{:<15}".format('Food ID','Food Name', 'Price'))
     print("-"*70)
     foodList = db_returnList(fileName)
     for food in foodList:
-        print("{:<10}{:<40}{:<20}".format(food[0], food[1], 'RM '+str(food[2])))
-    print('='*70)
+        print("{:<10}{:<45}{:<15}".format(food[0], food[1], 'RM '+str(food[2])))
+    print('_'*70)
 
 def db_displayAllFoodRecord():
     print(" " * 24, f"ALL FOOD ITEM\n")
@@ -223,21 +225,65 @@ def db_loginAccount(username,password):
 # endregion
 
 #region Pages
+def pg_custMenuItems(fileName, categoryHeader):
+    while True:
+        clearConsole()
+        u_insertHeader("MENU")
+        db_displayFoodRecord(fileName, categoryHeader)
+        print("Input Food ID to add to cart\n".center(70))
+        decision = input("Input your decision: ")
+
+
+pg_custMenuItems("Local.txt","Local Food")
+def pg_custMenuCategory():
+    while True:
+        clearConsole()
+        u_insertHeader("MENU")
+        print("CATEGORY".center(70)+"\n")
+        u_constructButton(1, [['LOCAL', 'Local Food'],['WESTERN','Western Food'],
+                              ['DESSERT','Dessert'],["BEVERAGE","Beverage"]])
+        u_insertLine()
+        print("Select Menu Category".center(70))
+        decision = input("\nInput your decision: ").upper()
+
+        if decision == "LOCAL":
+            pg_custMenuItems("Local.txt","Local")
+        else:
+            u_popup("[ERROR] INVALID INPUT DECISION")
+
+# pg_custMenuCategory()
+def pg_custMain(custUsername):
+    while True:
+        clearConsole()
+        #Display
+        u_insertHeader("SPIDERMAN ONLINE FOOD SERVICES", False)
+        print(f"Welcome, {custUsername}\n".center(70))
+        u_constructButton(1,[['MENU','Menu'], ['CART', 'Cart'], ['HISTORY', 'Order History'],['LOGOUT','Log Out']])
+        u_insertLine()
+        #Handle input
+        decision = input("Input your decision: ").upper()
+        if decision == 'MENU':
+            pg_custMenuCategory()
+        else:
+            u_popup("[ERROR] INVALID INPUT DECISION")
+
+# pg_custMain("Kudoshi")
+
 def pg_login():
     while True:
         clearConsole()
+        #Display
         u_insertHeader("LOGIN", False)
 
         username = input(" "*20+ "Username: ")
         password = input(" "*20+ "Password: ")
 
-        print('\n')
-        print("-"*70)
-
+        u_insertLine()
+        #Handle input
         login = db_loginAccount(username,password)
         if login:
             clearConsole()
-            #To customer page
+            pg_custMain(username)
             time.sleep(4)
             break
         else:
@@ -257,12 +303,11 @@ def pg_main():
         if decision == "LOGIN":
             pg_login()
         else:
-            print("Input proper value please")
-            time.sleep(1)
+            u_popup("[ERROR] INVALID INPUT DECISION!", 4)
 
 # endregion
 
-pg_main()
+# pg_main()
 
 #
 # if __name__ == '__main__':
