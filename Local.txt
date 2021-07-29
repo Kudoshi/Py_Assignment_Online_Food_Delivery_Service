@@ -1,4 +1,4 @@
-L001;Nasi Goreng Kampung Kimchi;10
-L002;Mee Goreng Mamak Hebat;11
-L003;Golden crispy chicken rendang;13
-L004;Meat loafed in a nutshell;15
+L001;Nasi Goreng Kampung Kimchi;10.00
+L002;Mee Goreng Mamak Hebat;11.00
+L003;Golden crispy chicken rendang;13.00
+L004;Meat loafed in a nutshell;15.00
