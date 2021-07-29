@@ -1,16 +1,20 @@
 import os
 import time
-#TODO: must make sure all files are there. Ensure files exist first
-
 #Receive - RC | Return - RT
-#Hi i am hongwei
 # region Utility
+
 def clearConsole():
+    print('\n'*200)
+    time.sleep(0.1)
     cmd = "clear"
     if os.name in ('dos', 'nt'):
         cmd = "cls"
 
     os.system(cmd)
+    time.sleep(0.1)
+    print("="*70)
+
+
 def setupDB():
     #Create files if not exist yet
     requiredFiles = ["Accounts.txt", "Beverage.txt", "Western.txt", "Dessert.txt", "Local.txt",
@@ -23,6 +27,55 @@ def setupDB():
     with open("Cart.txt", "w") as f:
         f.close()
 
+# Prints button
+# RC: Columnt Amt (max 3), 2D buttonList [buttonTitle, buttonName], resolution(pagesize)
+# MoveleftAmt = how much to the left from the centre aligned
+def u_insertLine(symbol='_', nextLine= True,length = 70):
+    if nextLine:
+        print('\n'+symbol*length)
+    else:
+        print(symbol*length)
+def u_insertHeader(header, backButton = True):
+    if backButton:
+        print('[BACK] Back')
+        print(header.center(70,' '))
+    else:
+        print('\n'+header.center(70,' '))
+
+    print('_'*70+'\n')
+
+def u_constructButton(columnAmt, buttonlist,moveLeftAmt=9, resolution=70):
+    gridSize = int(resolution / columnAmt)
+    leftPadding = int((gridSize / 2) - moveLeftAmt)
+    col = 0
+    text = ''
+    buttonsCnt = 0
+
+    for buttons in buttonlist:
+        buttonsCnt += 1
+        col += 1
+        text += ' ' * leftPadding + f"[{buttons[0]}] {buttons[1]}"
+
+        textLength = len(text) - (gridSize * (col - 1))
+        # Add remaining spaces of the grid
+        if textLength <= gridSize:
+            remainingSpace = gridSize - textLength
+            text += ' ' * remainingSpace
+        # Prints the text and reset the var
+        if col % columnAmt == 0 or buttonsCnt == len(buttonlist):
+            print(text+'\n')
+            text = ''
+            col = 0
+
+
+#RC: message, transitionSec, nxtLineAmt
+def u_popup(message, transitionSec = 4, nextLineAmt = 4):
+    clearConsole()
+    print('\n'*nextLineAmt)
+    print(message.center(70,' '))
+    time.sleep(transitionSec)
+
+
 # RC: 1D list RT: string
 def list_ToSingleString(list):
     string = ''
@@ -34,10 +87,12 @@ def list_ToSingleString(list):
             string = string + str(list[i]) + ';'
 
     return string
+
 # endregion
 
 #region DATABASE
-#UTILITY
+#------UTILITY--------
+
 #RT 2D list
 def db_returnList(fileName):
     list = []
@@ -84,19 +139,34 @@ def db_deleteRecord(fileName, id):
 
     db_overwriteRecord(fileName, list)
 
-#RT: new ID
+#RT: list[ID ,indexInList]
 def db_getNewID(fileName):
+    #Get code
+    if fileName == "Beverage.txt":
+        codeID = 'B'
+    elif fileName == "Cart.txt":
+        codeID = 'C'
+    elif fileName == "Dessert.txt":
+        codeID = 'D'
+    elif fileName == "Local.txt":
+        codeID = 'L'
+    elif fileName == "Order.txt":
+        codeID = 'R'
+    elif fileName == "Western.txt":
+        codeID = 'W'
+
+    #Get auto-increment id and the index of the gap
     list = db_returnList(fileName)
-    gapNumber = -1
-    print(list[0])
-    # if gapNumber < int(list[0]):
-    #     gapNumber = line
-
-    return gapNumber
-
-print(db_getNewID("Beverage.txt"))
-
-
+    gapNumber = 1
+    index = 0
+    for records in list:
+        if gapNumber == int(records[0][1:]):
+            gapNumber += 1
+        else:
+            break
+        index += 1
+    print(index)
+    return [codeID+str(gapNumber).zfill(3), index]
 
 #RC: 1d list
 def db_appendRecord(fileName, list): #append one dimensional list without the id
@@ -107,17 +177,17 @@ def db_appendRecord(fileName, list): #append one dimensional list without the id
 #for each string available write into the file
 
 
-#-----------END UTILITY------------
+#-----------PAGE LOGICS------------
 #Resolution of 70 spaces
 def db_displayFoodRecord(fileName, category):
-    print(" "*27, f"{category}")
-    print("="*70)
-    print("{:<10}{:<40}{:<20}".format('Food ID','Food Name', 'Price'))
+    print(f'{category}'.center(70))
+    print("-"*70)
+    print("{:<10}{:<45}{:<15}".format('Food ID','Food Name', 'Price'))
     print("-"*70)
     foodList = db_returnList(fileName)
     for food in foodList:
-        print("{:<10}{:<40}{:<20}".format(food[0], food[1], 'RM '+str(food[2])))
-    print('='*70)
+        print("{:<10}{:<45}{:<15}".format(food[0], food[1], 'RM '+str(food[2])))
+    print('_'*70)
 
 def db_displayAllFoodRecord():
     print(" " * 24, f"ALL FOOD ITEM\n")
@@ -128,24 +198,118 @@ def db_displayAllFoodRecord():
         db_displayFoodRecord(element[0],element[1])
         print('\n')
 
-db_displayAllFoodRecord()
-    #TODO do
 def db_registerAccount(username, password): #return false if can't register
     # ADMIN CHECK
-    if username == "admin":
-        return False
-
     #Checks if value exist
     if db_searchRecord("Accounts.txt", username):
         return False
 
     account = [username,password]
-    db_addRecord('Accounts.txt', account)
+    db_appendRecord('Accounts.txt', account)
     return True
 
+
+def db_loginAccount(username,password):
+    #Check admin credentials
+    if username == 'admin' and password == 'SystemAdmin123':
+        print("Admin page")
+        #to admin page
+
+    #Check user login credentials
+    account = db_searchRecord('Accounts.txt', username, True)
+    if account != False and account[1] == password:
+        return True
+    else:
+        return False
+
+
 # endregion
-def main():
-    print("hey")
+
+#region Pages
+def pg_custMenuItems(fileName, categoryHeader):
+    while True:
+        clearConsole()
+        u_insertHeader("MENU")
+        db_displayFoodRecord(fileName, categoryHeader)
+        print("Input Food ID to add to cart\n".center(70))
+        decision = input("Input your decision: ")
+
+
+pg_custMenuItems("Local.txt","Local Food")
+def pg_custMenuCategory():
+    while True:
+        clearConsole()
+        u_insertHeader("MENU")
+        print("CATEGORY".center(70)+"\n")
+        u_constructButton(1, [['LOCAL', 'Local Food'],['WESTERN','Western Food'],
+                              ['DESSERT','Dessert'],["BEVERAGE","Beverage"]])
+        u_insertLine()
+        print("Select Menu Category".center(70))
+        decision = input("\nInput your decision: ").upper()
+
+        if decision == "LOCAL":
+            pg_custMenuItems("Local.txt","Local")
+        else:
+            u_popup("[ERROR] INVALID INPUT DECISION")
+
+# pg_custMenuCategory()
+def pg_custMain(custUsername):
+    while True:
+        clearConsole()
+        #Display
+        u_insertHeader("SPIDERMAN ONLINE FOOD SERVICES", False)
+        print(f"Welcome, {custUsername}\n".center(70))
+        u_constructButton(1,[['MENU','Menu'], ['CART', 'Cart'], ['HISTORY', 'Order History'],['LOGOUT','Log Out']])
+        u_insertLine()
+        #Handle input
+        decision = input("Input your decision: ").upper()
+        if decision == 'MENU':
+            pg_custMenuCategory()
+        else:
+            u_popup("[ERROR] INVALID INPUT DECISION")
+
+# pg_custMain("Kudoshi")
+
+def pg_login():
+    while True:
+        clearConsole()
+        #Display
+        u_insertHeader("LOGIN", False)
+
+        username = input(" "*20+ "Username: ")
+        password = input(" "*20+ "Password: ")
+
+        u_insertLine()
+        #Handle input
+        login = db_loginAccount(username,password)
+        if login:
+            clearConsole()
+            pg_custMain(username)
+            time.sleep(4)
+            break
+        else:
+            clearConsole()
+            u_popup('[ERROR] INCORRECT USERNAME OR PASSWORD', 4, 4)
+            break
+
+def pg_main():
+    while True:
+        clearConsole()
+        u_insertHeader("MAIN MENU", False)
+        u_constructButton(1, [["LOGIN", 'Login'], ["REGISTER", "Register"],
+                              ['GUEST', 'View as Guest'], ['EXIT', 'Exit']])
+        u_insertLine()
+        decision = input("Input your decision: ").upper()
+
+        if decision == "LOGIN":
+            pg_login()
+        else:
+            u_popup("[ERROR] INVALID INPUT DECISION!", 4)
+
+
+# endregion
+
+# pg_main()
 
 #
 # if __name__ == '__main__':
