@@ -21,8 +21,6 @@ The system is splitted into 4 regions:
           Simple short logic will sometime exist in this part. 
 '''
 
-
-
 #Receive - RC | Return - RT
 # region Utility
 
@@ -70,6 +68,7 @@ def u_insertHeader(header, backButton = True):
     # RC: Columnt Amt (max 3), 2D buttonList [[buttonTitle, buttonName],[]], resolution(default 70 spaces)
     # MoveleftAmt = how much to the left from the centre aligned
     '''
+
     if backButton:
         print('[BACK] Back')
         print(header.center(70,' '))
@@ -259,6 +258,7 @@ def db_displayFoodRecord(fileName, category):
     foodList = db_returnList(fileName)
     for food in foodList:
         print("{:<10}{:<45}{:<15}".format(food[0], food[1], f"RM {float(food[2]):.2f}"))
+
     print('_'*70)
 
 def db_displayAllFoodRecord():
@@ -579,7 +579,6 @@ def pg_custMenuItems(fileName, categoryHeader):
             u_popup("FOOD ITEM NOT FOUND", 1.5)
             continue
 
-
 def pg_custMenuCategory():
     while True:
         clearConsole()
@@ -613,6 +612,7 @@ def pg_custMain():
         print(f"Welcome, {db_returnList('Cart.txt')[0][0]}\n".center(70))
         u_constructButton(1,[['MENU','Menu'], ['CART', 'Cart'],
                              ['HISTORY', 'Order History'],['LOGOUT','Log Out']])
+
         u_insertLine()
         #Handle input
         decision = input("Input your decision: ").upper()
@@ -695,6 +695,7 @@ def pg_main():
     while True:
         clearConsole()
         u_insertHeader("WELCOME TO SPIDERMAN ONLINE FOOD DELIVERY SERVICES", False)
+
         u_constructButton(1, [["LOGIN", 'Login'], ["REGISTER", "Register"],
                               ['GUEST', 'View as Guest'], ['EXIT', 'Exit']])
         u_insertLine()
@@ -709,8 +710,6 @@ def pg_main():
             break
         else:
             u_popup("[ERROR] INVALID INPUT DECISION!", 1.5)
-
-
 
 # endregion
 
