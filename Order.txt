@@ -1,0 +1,8 @@
+000001;Kudo;40.00;Lorong Terrenganu;31/07/2021, 01:37;6;L001>Nasi Goreng Kampung Kimchi>10.00>2;L002>Bright Chiah>12.00>1
+000002;Kudo;40.00;Lorong Terrenganu;31/07/2021, 01:37;6;L001>Nasi Goreng Kampung Kimchi>10.00>2;L002>Bright Chiah>12.00>1
+000003;Kudo;32.0;No3, Lorong Putang Jaya;31/07/2021, 01:41;2;L001>Nasi Goreng Kampung Kimchi>10.00>2;L002>Bright Chiah>12.00>1
+000004;Hooya;112.0;No 3, Tiger Lorong Besar Dua Tiga, 67000, Harimau besar;31/07/2021, 02:00;4;B001>Beverage1>25>2;L002>Mee Goreng Mamak Hebat>11.00>2;W005>Poison Ivy>5>3;D001>Ayamas>25>1
+000005;Kudo;40.00;yNo 3 fysrsafdas;31/07/2021, 13:03;2;L004>Meat loafed in a nutshell>15.00>2;W002>Spaggethi Sauce>10.00>1
+000006;Kudo;50.00;No 3 destiny;31/07/2021, 13:08;1;D001>Ayamas>25.00>2
+000007;Kudoshi;89.00;No 3 Taman Jaya, Bukit Jalempong, 21000 Jalempong, Negeri Keduaan;31/07/2021, 16:18;2;L001>Nasi Goreng Kampung Kimchi>10.00>2;B002>Beverage2>69.00>1
+000008;HongWei;100.00;Velocity Cheras,123412341 Cheras yoyo;31/07/2021, 16:39;1;L001>Nasi Goreng Kampung Kimchi>10.00>10
