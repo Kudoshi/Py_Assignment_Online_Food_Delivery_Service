@@ -1,4 +1,6 @@
 B001;Beverage1;25
-B002;Beverage2;69
-B003;Nasi Lemak;25
+B002;Great Coffee NY;14.49
+B003;Nasi Lemak Juice;12.99
+B004;Soda Poppin';12.25
 B005;Hebat hebat tay tay;5
+B006;Sky Latte Juice;12.49

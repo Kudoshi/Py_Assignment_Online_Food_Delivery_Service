@@ -108,7 +108,7 @@ def u_constructButton(columnAmt, buttonlist,moveLeftAmt=9, resolution=70):
 
 
 #RC: message, transitionSec, nxtLineAmt
-def u_popup(message, transitionSec = 4, nextLineAmt = 4):
+def u_popup(message, transitionSec = 2, nextLineAmt = 4):
     '''
     Generates an empty page containing the message. After a few transition sec it then returns control to the caller.
     Able to specify how many next line at the top of the message (nextLineAmt)
@@ -291,16 +291,9 @@ def db_registerAccount(username, password): #return false if can't register
 
 def db_loginAccount(username,password):
     '''
-    Used by login page to login. Checks admin login or user login. Returns True or False indicating success operation
-    Checks for ADMIN login with:
-    username - admin | password - SystemAdmin123
+    Used by login page to login. Returns True or False indicating success operation
 
     '''
-    #Check admin credentials
-    if username == 'admin' and password == 'SystemAdmin123':
-        print("Admin page")
-        #to admin page
-
     #Check user login credentials
     account = db_searchRecord('Accounts.txt', username, True)
     if account != False and account[1] == password:
@@ -629,6 +622,464 @@ def pg_custMain():
         else:
             u_popup("[ERROR] INVALID INPUT DECISION",1.5)
 
+# region pg_adminAdd()
+def pg_adminAdd3(cat_name_price):
+    while True:
+        clearConsole()
+        u_insertHeader(f"COMFIRM ADD TO '{cat_name_price[0]}'")
+        print(f"\n", " " * 18, f"new item name  : {cat_name_price[1]} \n", " " * 18,
+              f"new item price : RM {cat_name_price[2]}")
+
+        print("\n\n" + " " * 8 + "[CONFIRM] to confirm" + " " * 16 + "[REDO] to re-enter")
+        print(" " * 8 + "   [BACK] to back\n")
+        print("-" * 70)
+
+        uinput_comfirmation = input("Select your option : ")
+        if uinput_comfirmation.upper() == "CONFIRM":
+            newid_index = db_getNewID(cat_name_price[0] + ".txt")
+            newlist = [newid_index[0], cat_name_price[1], cat_name_price[2]]
+            list1 = []
+            with open(cat_name_price[0] + ".txt", "r") as readfile:
+                for data in readfile:
+                    list1.append(data.strip().split(";"))
+            list1.insert(int(newid_index[1]), newlist)
+            db_overwriteRecord(cat_name_price[0] + ".txt", list1)
+            u_popup("[SUCCESS] item added")
+            break
+        elif uinput_comfirmation.upper() == "REDO":
+            return True
+        elif uinput_comfirmation.upper() == "BACK":
+            break
+        else:
+            u_popup("Please enter a proper value")
+            continue
+
+
+def pg_adminAdd2(category):
+    '''
+    Page to insert new name and price
+    '''
+    while True:
+        clearConsole()
+        u_insertHeader(f"ADD TO {category}")
+        uinput_newname = input(" " * 22 + "new item name  : ")
+        if uinput_newname.upper() == "BACK":
+            break
+        if ';' in uinput_newname or '>' in uinput_newname:
+            u_popup("Do not insert ';' and '>' within item name")
+            continue
+
+        uinput_newprice = input(" " * 22 + "new item price : RM ")
+        if uinput_newprice.lower() == "back":
+            break
+
+        try:
+            check_price = round(float(uinput_newprice), 2)
+            check_price = "{:,.2f}".format(check_price)
+        except:
+            u_popup("Please enter a proper value")
+            continue
+
+        cat_name_price = [category, uinput_newname, check_price]
+        redo = pg_adminAdd3(cat_name_price)
+        if redo:
+            continue
+        else:
+            break
+
+def pg_adminAdd1():
+    '''
+    Select food category to add page
+    :return:
+    '''
+    while True:
+        clearConsole()
+        u_insertHeader("ADD")
+        print("Select Category".center(70, " "))
+        print("\n", " " * 26, "[1]    Local")
+        print(" " * 27, "[2]    Western")
+        print(" " * 27, "[3]    Dessert")
+        print(" " * 27, "[4]    Beverage")
+        print(" " * 24, "[BACK]    Back\n")
+        print("\n", "=" * 70)
+
+        uinput_cat = input("Enter your selection: ")
+        if uinput_cat == "1":
+            selected_cat = "Local"
+        elif uinput_cat == "2":
+            selected_cat = "Western"
+        elif uinput_cat == "3":
+            selected_cat = "Dessert"
+        elif uinput_cat == "4":
+            selected_cat = "Beverage"
+        elif uinput_cat.upper() == "BACK":
+            break
+        else:
+            u_popup("Please insert a proper value")
+            continue
+
+        pg_adminAdd2(selected_cat)
+
+
+# endregion
+
+# region pg_adminModify()
+def pg_adminModify3(cat_list, foodidx, uinput_modifiedname, checked_price, category):
+    '''
+    Confirm the modification to item page
+    '''
+    while True:
+        clearConsole()
+        u_insertHeader(f"Confirm to MODIFY '{cat_list[foodidx][0]}'")
+        print(" " * 20, f"initial name  : {cat_list[foodidx][1]}")
+        print(" " * 20, f"initial price : RM {cat_list[foodidx][2]}\n")
+        print(" " * 24, f"new name  : {uinput_modifiedname}")
+        print(" " * 24, f"new price : RM {checked_price}\n")
+        print("_" * 70, "\n")
+        print("Select an Option".center(70, " "))
+        print("\n" + " " * 8 + "[CONFIRM] to confirm" + " " * 16 + "[REDO] to re-enter")
+        print(" " * 8 + "   [BACK] to back\n")
+        print("=" * 70)
+        uinput_decision = input("Input your decision : ")
+
+        if uinput_decision.upper() == "BACK":
+            break
+        elif uinput_decision.upper() == "REDO":
+            return True
+        elif uinput_decision.upper() == "CONFIRM":
+            cat_list[foodidx].pop(1)
+            cat_list[foodidx].insert(1, uinput_modifiedname)
+            cat_list[foodidx].pop(2)
+            cat_list[foodidx].insert(2, checked_price)
+            db_overwriteRecord(category + ".txt", cat_list)
+            u_popup("[SUCCESS] item modified")
+            break
+
+
+def pg_adminModify2(category, foodid):
+    '''
+    Insert new name and new price page
+    '''
+    while True:
+        clearConsole()
+        u_insertHeader(foodid)
+        cat_list = []
+        with open(category + ".txt", "r") as readfile:
+            for appendtolist in readfile:
+                cat_list.append(appendtolist.strip().split(";"))
+
+        foodidx = 0
+        for food in cat_list:
+            if foodid in food:
+                break
+            else:
+                foodidx += 1
+
+        print(" " * 20, f"Original Name  : {cat_list[foodidx][1]}")
+        print(" " * 20, f"Original Price : RM {cat_list[foodidx][2]}\n")
+        print("_" * 70)
+        uinput_modifiedname = input("\n" + " " * 23 + "new name  : ")
+
+        # Validation check
+        if ';' in uinput_modifiedname or '>' in uinput_modifiedname:
+            u_popup("[ERROR] invalid symbol ';' or '>'")
+            continue
+
+        if uinput_modifiedname.upper() == "BACK":
+            break
+        uinput_modifiedprice = input(" " * 23 + "new price : RM ")
+        if uinput_modifiedprice.upper() == "BACK":
+            break
+
+        try:
+            check_price = float(uinput_modifiedprice)
+            check_price = "{:,.2f}".format(check_price)
+        except:
+            u_popup("[ERROR] insert proper price")
+            continue
+
+        redo = pg_adminModify3(cat_list, foodidx, uinput_modifiedname, check_price, category)
+
+        if redo:
+            continue
+        else:
+            break
+
+
+def pg_adminModify1():
+    '''
+    Display all records of food item that can be modified
+    '''
+    while True:
+        clearConsole()
+        db_displayAllFoodRecord()
+        uinput_itemtochange = input("Input Food ID to modify: ")
+
+        if uinput_itemtochange.upper() == "BACK":
+            break
+        elif uinput_itemtochange[0].upper() == "L":
+            category = "Local"
+        elif uinput_itemtochange[0].upper() == "W":
+            category = "Western"
+        elif uinput_itemtochange[0].upper() == "D":
+            category = "Dessert"
+        elif uinput_itemtochange[0].upper() == "B":
+            category = "Beverage"
+        else:
+            u_popup("[ERROR] value invalid")
+            continue
+
+        if db_searchRecord(category + ".txt", uinput_itemtochange):
+            pg_adminModify2(category, uinput_itemtochange)
+        elif not db_searchRecord(category + ".txt", uinput_itemtochange):
+            u_popup("[ERROR] value invalid")
+            continue
+
+
+# endregion
+
+# region pg_adminDisplay()
+def pg_adminDisplay():
+    while True:
+        clearConsole()
+        u_insertHeader("DISPLAY")
+        print("Select to display".center(70, " "))
+        print("\n" + " " * 24, "[1]    All categories")
+        print(" " * 24, "[2]    ALL food item")
+        print(" " * 24, "[3]    Order list")
+        print(" " * 24, "[4]    Payment list")
+        print(" " * 21, "[BACK]    Back\n")
+        print("_" * 70)
+        uinput_display = input("Input your decision : ")
+
+        if uinput_display == "1":
+            clearConsole()
+            u_insertHeader("ALL CATEGORIES", False)
+            print(" " * 28, "1. LOCAL")
+            print(" " * 28, "2. WESTERN")
+            print(" " * 28, "3. DESSERT")
+            print(" " * 28, "4. BEVERAGE\n")
+            print("_" * 70)
+            print("\n" + "[ENTER] to back".center(70, " "))
+            input(" ")
+            continue
+
+        elif uinput_display == "2":
+            clearConsole()
+            db_displayAllFoodRecord()
+            print("[ENTER] to back".center(70, " ") + "\n")
+            input("")
+            continue
+
+        elif uinput_display == "3":
+            clearConsole()
+            u_insertHeader("ORDER LIST", False)
+            print("\n")
+            orderlist = []
+            with open("order.txt", "r") as readOrder:
+                for orderdetails in readOrder:
+                    orderlist.append(orderdetails.strip().split(";"))
+
+            for fooddetails in orderlist:
+                print("#" * 70)
+                print(f"Order ID      : {fooddetails[0]}")
+                print(f"Customer Name : {fooddetails[1]}")
+                print(f"Total Ordered : {fooddetails[5]}\n\n")
+                print("{:<8} {:<45} {:<5} {:<9}".format("FOODID", "FOOD NAME", "QTY", "PRICE(RM)"))
+                print("{:<8} {:<45} {:<5} {:<9}".format("_" * 6, "_" * 43, "_" * 3, "_" * 9))
+
+                for foodID_name_price in fooddetails[6:]:
+                    food = foodID_name_price.split(">")
+                    print("{:<8} {:<45} {:<5} {:<9}".format(food[0], food[1], food[3], food[2]))
+
+                print("\n" + "=" * 70)
+                print("\n\n\n\n")
+
+            print("[ENTER] to Back".center(70, " "))
+            input("")
+
+        elif uinput_display == "4":
+            clearConsole()
+            u_insertHeader("ORDER LIST", False)
+            print("\n")
+            paymentlist = []
+            with open("order.txt", "r") as readOrder:
+                for orderdetails in readOrder:
+                    paymentlist.append(orderdetails.strip().split(";"))
+
+            for paymentdetails in paymentlist:
+                print(f"Order ID      : {paymentdetails[0]}")
+                print(f"Customer Name : {paymentdetails[1]}")
+                print(f"Total Fee     : RM {paymentdetails[2]}")
+                print(f"Address       : {paymentdetails[3]}")
+                print(f"Date & Time   : {paymentdetails[4]}\n\n\n")
+
+            print("[ENTER] to Back")
+            input("")
+
+
+        elif uinput_display.upper() == "BACK":
+            break
+        else:
+            u_popup("Please insert a proper value")
+            continue
+
+# endregion
+
+# region pg_adminSearch()
+def pg_adminSearch_order():
+    while True:
+        clearConsole()
+        u_insertHeader("SEARCH 'CUSTOMER ORDER'")
+        try:
+            uinput_orderid = input("Input Order ID to search : ")
+            if uinput_orderid.upper() == "BACK":
+                break
+            search = db_searchRecord("Order.txt", uinput_orderid, True)
+
+            print("\n\n" + "*" * 70)
+            print(f"\nOrder ID      : {search[0]}")
+            print(f"Customer Name : {search[1]}")
+            print(f"Total Ordered : {search[5]}\n\n")
+            print("{:<8} {:<45} {:<5} {:<9}".format("FOODID", "FOOD NAME", "QTY", "PRICE(RM)"))
+            print("{:<8} {:<45} {:<5} {:<9}".format("_" * 6, "_" * 43, "_" * 3, "_" * 9))
+
+            for foodID_name_price in search[6:]:
+                food = foodID_name_price.split(">")
+                print("{:<8} {:<45} {:<5} {:<9}".format(food[0], food[1], food[3], food[2]))
+            print("\n" + "*" * 70 + "\n\n")
+
+        except:
+            u_popup("[ERROR] Order ID does not exist")
+            continue
+
+        print("Select".center(70, " "), "\n")
+        print(" " * 9 + "[REDO] to re-search" + " " * 16 + "[BACK] to back" + "\n")
+        print("-" * 70)
+        uinput_selection = input("Input a value : ")
+
+        if uinput_selection.upper() == "REDO":
+            continue
+        elif uinput_selection.upper() == "BACK":
+            break
+
+
+def pg_adminSearch_payment():
+    while True:
+        clearConsole()
+        u_insertHeader("SEARCH 'Customer Payment'")
+
+        try:
+            uinput_orderid = input("Input Order ID to search : ")
+            if uinput_orderid.upper() == "BACK":
+                break
+            search = db_searchRecord("Order.txt", uinput_orderid, True)
+
+            print(f"\n\nOrder ID      : {search[0]}")
+            print(f"Customer Name : {search[1]}")
+            print(f"Total Fee     : RM {search[2]}")
+            print(f"Address       : {search[3]}")
+            print(f"Date & Time   : {search[4]}\n\n\n")
+
+        except:
+            u_popup("[ERROR] Order ID does not exist")
+            continue
+
+        print("-" * 70)
+        print("\n" + "Select".center(70, " "), "\n")
+        print(" " * 9 + "[REDO] to re-search" + " " * 16 + "[BACK] to back" + "\n")
+        print("-" * 70)
+        uinput_selection = input("Input a value : ")
+
+        if uinput_selection.upper() == "REDO":
+            continue
+        elif uinput_selection.upper() == "BACK":
+            break
+        else:
+            u_popup("[ERROR] input proper value")
+
+
+def pg_adminSearch():
+    while True:
+        clearConsole()
+        u_insertHeader("SEARCH")
+        print("Select to search".center(70, " "), "\n")
+        print(" " * 24, "[1]  Customer Order")
+        print(" " * 24, "[2]  Customer Payment\n")
+        print("_" * 70)
+        uinput_search = input("Input your decision : ")
+
+        if uinput_search.upper() == "BACK":
+            break
+        elif uinput_search == "1":
+            pg_adminSearch_order()
+        elif uinput_search == "2":
+            pg_adminSearch_payment()
+        else:
+            u_popup("[ERROR] Please input proper value")
+            continue
+
+
+
+# endregion
+
+# region pg_adminMain()
+def pg_adminMain():
+    while True:
+        clearConsole()
+        u_insertHeader("ADMIN MAIN PAGE")
+        print("Select to".center(70, " "))
+        print("\n" + " " * 26, "[1]    Add New Item")
+        print(" " * 26, "[2]    Modify Menu")
+        print(" " * 26, "[3]    Display")
+        print(" " * 26, "[4]    Search")
+        print(" " * 23, "[BACK]    Back\n")
+        print("\n", "=" * 70)
+
+        uinput_cat = input("Enter your selection: ")
+        if uinput_cat == "1":
+            pg_adminAdd1()
+        elif uinput_cat == "2":
+            pg_adminModify1()
+        elif uinput_cat == "3":
+            pg_adminDisplay()
+        elif uinput_cat == "4":
+            pg_adminSearch()
+        elif uinput_cat.upper() == "BACK":
+            break
+        else:
+            u_popup("Please insert a proper value")
+            continue
+
+
+# endregion
+
+
+# region pg_guess():
+def pg_guest():
+    while True:
+        clearConsole()
+        u_insertHeader("LOGIN AS GUEST")
+        db_displayAllFoodRecord()
+
+        print("REGISTER AN ACCOUNT TO PLACE ORDER".center(70, " "), "\n")
+        print(" " * 9 + "[REGISTER] to register" + " " * 16 + "[BACK] to back" + "\n")
+        print("-" * 70)
+        uinput_selection = input("Input a value : ")
+
+        if uinput_selection.upper() == "REGISTER":
+            pg_register()
+            break
+        elif uinput_selection.upper() == "BACK":
+            break
+        else:
+            u_popup("[ERROR] input proper value")
+            continue
+
+# endregion
+
+
+
 def pg_register():
     while True:
         clearConsole()
@@ -666,6 +1117,11 @@ def pg_register():
 
 def pg_login():
     while True:
+        '''
+        User login / admin login page
+        Admin account is set and cannot be created
+        Admin - username: Admin password: SystemAdmin123
+        '''
         clearConsole()
         #Display
         u_insertHeader("LOGIN", False)
@@ -674,7 +1130,12 @@ def pg_login():
         password = input(" "*20+ "Password: ")
 
         u_insertLine()
-        #Handle input
+
+        #Check for admin
+        if username == 'Admin' and password == 'SystemAdmin123':
+            pg_adminMain()
+            break
+
         login = db_loginAccount(username,password)
         if login:
             clearConsole()
@@ -708,6 +1169,8 @@ def pg_main():
         elif decision == "EXIT":
             pg_exit()
             break
+        elif decision == 'GUEST':
+            pg_guest()
         else:
             u_popup("[ERROR] INVALID INPUT DECISION!", 1.5)
 
