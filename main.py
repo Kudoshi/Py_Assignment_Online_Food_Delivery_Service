@@ -33,7 +33,7 @@ def clearConsole():
     time.sleep(0.1)
     cmd = "clear"
     if os.name in ('dos', 'nt'):
-        cmd = "cls"
+        cmd = "cls cmd"
 
     os.system(cmd)
     time.sleep(0.1)
@@ -432,7 +432,7 @@ def pg_cartCheckout():
         #Display cart content
 
         for i in range(1, len(cartList), 1):
-            totalQuantity += 1
+            totalQuantity += int(cartList[i][3])
             totalPrice += float(cartList[i][2]) * float(cartList[i][3])
             print("{:<45}{:<18}{:<7}".format(cartList[i][1], f'RM {float(cartList[i][2]):.2f}', cartList[i][3]))
 
@@ -522,7 +522,7 @@ def pg_cart():
 
         #Display cart content
         for i in range(1,len(cartList),1):
-            totalQuantity+=1
+            totalQuantity += int(cartList[i][3])
             totalPrice+= float(cartList[i][2])*float(cartList[i][3])
             print("{:<45}{:<18}{:<7}".format(cartList[i][1], f'RM {float(cartList[i][2]):.2f}', cartList[i][3]))
 

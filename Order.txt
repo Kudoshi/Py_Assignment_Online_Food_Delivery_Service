@@ -6,3 +6,4 @@
 000006;Kudo;50.00;No 3 destiny;31/07/2021, 13:08;1;D001>Ayamas>25.00>2
 000007;Kudoshi;89.00;No 3 Taman Jaya, Bukit Jalempong, 21000 Jalempong, Negeri Keduaan;31/07/2021, 16:18;2;L001>Nasi Goreng Kampung Kimchi>10.00>2;B002>Beverage2>69.00>1
 000008;HongWei;100.00;Velocity Cheras,123412341 Cheras yoyo;31/07/2021, 16:39;1;L001>Nasi Goreng Kampung Kimchi>10.00>10
+000009;Kudo;126.00;No 3 taman jaya vinti sulaiman;04/08/2021, 00:26;12;W001>Chicken Chop>11.00>5;W003>Bolognese pasta>9.00>3;L002>Mee Goreng Mamak Hebat>11.00>4
