@@ -744,7 +744,7 @@ def pg_adminModify3(cat_list, foodidx, uinput_modifiedname, checked_price, categ
         uinput_decision = input("Input your decision : ")
 
         if uinput_decision.upper() == "BACK":
-            break
+            return True
         elif uinput_decision.upper() == "REDO":
             return True
         elif uinput_decision.upper() == "CONFIRM":
@@ -754,32 +754,15 @@ def pg_adminModify3(cat_list, foodidx, uinput_modifiedname, checked_price, categ
             cat_list[foodidx].insert(2, checked_price)
             db_overwriteRecord(category + ".txt", cat_list)
             u_popup("[SUCCESS] item modified")
-            break
+            return False
+        else:
+            u_popup("Please enter a proper value")
 
-
-def pg_adminModify2(category, foodid):
-    '''
-    Insert new name and new price page
-    '''
+def pg_adminModify(cat_list, foodidx,category):
     while True:
         clearConsole()
-        u_insertHeader(foodid)
-        cat_list = []
-        with open(category + ".txt", "r") as readfile:
-            for appendtolist in readfile:
-                cat_list.append(appendtolist.strip().split(";"))
-
-        foodidx = 0
-        for food in cat_list:
-            if foodid in food:
-                break
-            else:
-                foodidx += 1
-
-        print(" " * 20, f"Original Name  : {cat_list[foodidx][1]}")
-        print(" " * 20, f"Original Price : RM {cat_list[foodidx][2]}\n")
-        print("_" * 70)
-        uinput_modifiedname = input("\n" + " " * 23 + "new name  : ")
+        u_insertHeader(f"MODIFY {cat_list[foodidx][1]}")
+        uinput_modifiedname = input(" " * 23 + "new name  : ")
 
         # Validation check
         if ';' in uinput_modifiedname or '>' in uinput_modifiedname:
@@ -803,9 +786,84 @@ def pg_adminModify2(category, foodid):
 
         if redo:
             continue
+        elif not redo:
+            return True
         else:
             break
 
+def pg_adminDelete(cat_list, foodidx, category):
+    while True:
+        clearConsole()
+        print("\n" + f"Confirm to delete '{cat_list[foodidx][1]}'".center(70, " "))
+        print("\n" + " " * 8 + "[CONFIRM] to confirm" + " " * 16 + "[BACK] to back")
+        uinput_confirmation = input("\nInput your decision : ")
+        if uinput_confirmation.upper() == "BACK":
+            return True
+        elif uinput_confirmation.upper() == "CONFIRM":
+            location = 0
+            for findidx in cat_list:
+                if cat_list[foodidx][0] in findidx:
+                    break
+                else:
+                    location += 1
+            cat_list.pop(location)
+            with open(f"{category}" + ".txt", "w") as overwritefile:
+                for overwriteitem in cat_list:
+                    overwritefile.write(f"{overwriteitem[0]};{overwriteitem[1]};{overwriteitem[2]}\n")
+            u_popup("[SUCCESS] item deleted")
+            break
+        else:
+            u_popup("Please insert a proper value")
+            continue
+
+def pg_adminModify2(category, foodid):
+    '''
+    Insert new name and new price page
+    '''
+    while True:
+        clearConsole()
+        u_insertHeader(foodid)
+        cat_list = []
+        with open(category + ".txt", "r") as readfile:
+            for appendtolist in readfile:
+                cat_list.append(appendtolist.strip().split(";"))
+
+        foodidx = 0
+        for food in cat_list:
+            if foodid in food:
+                break
+            else:
+                foodidx += 1
+
+        print(" " * 20, f"Original Name  : {cat_list[foodidx][1]}")
+        print(" " * 20, f"Original Price : RM {cat_list[foodidx][2]}\n")
+        print("_" * 70)
+
+        print("\n\n" + " " * 8 + " [DELETE] to delete" + " " * 15 + "[MODIFY] to modify")
+        print(" " * 8 + "   [BACK] to back\n")
+        print("-" * 70)
+
+
+        uinput_selection = input("Input your decision : ")
+        if uinput_selection.upper() == "DELETE":
+            cnt = pg_adminDelete(cat_list, foodidx, category)
+            if cnt:
+                continue
+            else:
+                break
+
+
+        elif uinput_selection.upper() == "MODIFY":
+            pagebreak = pg_adminModify(cat_list, foodidx,category)
+            if pagebreak:
+                break
+            else:
+                continue
+        elif uinput_selection.upper() == "BACK":
+            break
+        else:
+            u_popup("Please enter a proper value")
+            continue
 
 def pg_adminModify1():
     '''
@@ -814,26 +872,30 @@ def pg_adminModify1():
     while True:
         clearConsole()
         db_displayAllFoodRecord()
-        uinput_itemtochange = input("Input Food ID to modify: ")
+        uinput_itemtochange = input("Input Food ID to delete / modify: ")
 
-        if uinput_itemtochange.upper() == "BACK":
-            break
-        elif uinput_itemtochange[0].upper() == "L":
-            category = "Local"
-        elif uinput_itemtochange[0].upper() == "W":
-            category = "Western"
-        elif uinput_itemtochange[0].upper() == "D":
-            category = "Dessert"
-        elif uinput_itemtochange[0].upper() == "B":
-            category = "Beverage"
-        else:
-            u_popup("[ERROR] value invalid")
+        try:
+            if uinput_itemtochange.upper() == "BACK":
+                break
+            elif uinput_itemtochange[0].upper() == "L":
+                category = "Local"
+            elif uinput_itemtochange[0].upper() == "W":
+                category = "Western"
+            elif uinput_itemtochange[0].upper() == "D":
+                category = "Dessert"
+            elif uinput_itemtochange[0].upper() == "B":
+                category = "Beverage"
+            else:
+                u_popup("[ERROR] Food ID invalid")
+                continue
+        except:
+            u_popup("[ERROR] Food ID invalid")
             continue
 
         if db_searchRecord(category + ".txt", uinput_itemtochange):
             pg_adminModify2(category, uinput_itemtochange)
         elif not db_searchRecord(category + ".txt", uinput_itemtochange):
-            u_popup("[ERROR] value invalid")
+            u_popup("[ERROR] Food ID invalid")
             continue
 
 
