@@ -396,13 +396,14 @@ def pg_custOrderHistory():
                 print(" ")
                 u_insertLine("-", False)
                 print("{:<9}{:<40}{:<12}{:<10}".format("Food ID","Food Items","Price","Quantity"))
+                print("-"*70)
                 for foodItem in range(6,len(orderRecord),1):
                     foodDetails = orderRecord[foodItem].strip().split(">")
                     print("{:<9}{:<40}{:<15}{:<7}".format(foodDetails[0],foodDetails[1],foodDetails[2],foodDetails[3]))
 
                 u_insertLine("_",False)
                 u_insertLine("x")
-                print("\n\n")
+                print("\n\n\n")
 
         u_constructButton(1,[["BACK", "Back"]])
         decision = input("Input your decision: ").upper()
