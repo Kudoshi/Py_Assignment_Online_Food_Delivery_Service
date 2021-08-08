@@ -1,5 +1,5 @@
 #BRENDEN TAN POH GUAN - TP061596
-#CHAN HONG WEI - TP
+#CHAN HONG WEI - TP060647
 
 import os
 import time
@@ -15,10 +15,10 @@ The back-end is where the underlying logic of the page resides.
 The system is splitted into 4 regions:
 
 1. Utility - Support functions to help the coding of the system.(e.g. clearConsole,u_constructButton)
-2. db utility - Support functions that aids in coding the logic part of the page. (e.g. db_searchRecord)
-3. db logic - The main logic behind the pages. Handles all the logic and some input validations. 
-4. page - Handles display, navigations, sometimes validation and user input. 
-          Simple short logic will sometime exist in this part. 
+2. Database - Support functions that aids in coding the logic part of the page. (e.g. db_searchRecord)
+3. Db Page logic - The main logic behind the pages. Handles all the logic and some input validations. 
+4. Pages - Handles display, navigations, sometimes validation and user input. 
+          Simple short logic will sometime exist in this part. The page is further split into a few section.
 '''
 
 #Receive - RC | Return - RT
@@ -136,7 +136,7 @@ def list_ToSingleString(list):
 
 # endregion
 
-#region DATABASE
+#region Database
 #---------UTILITY----------
 
 #RT 2D list
@@ -187,20 +187,6 @@ def db_searchRecord(fileName, id, returnRecord = False): #returnRecord: True - r
     else: #record not found
         return False
 
-#RC: id
-def db_deleteRecord(fileName, id):
-    '''
-    Deletes the record based on id
-    It searches the file and turns it into 2D list. Removes it from the list and then overwrite the file.
-    '''
-    #Get the list first
-    list = db_returnList(fileName)
-    if db_searchRecord(fileName, id):
-        # print(db_searchRecord(fileName,id, returnRecord=True))
-        list.remove(db_searchRecord(fileName,id, returnRecord=True))
-
-    db_overwriteRecord(fileName, list)
-
 #RT: list[ID ,indexInList]
 def db_getNewID(fileName):
     '''
@@ -227,6 +213,7 @@ def db_getNewID(fileName):
         else:
             break
         index += 1
+        print(index)
 
     #Order code
     if fileName == "Order.txt":
@@ -246,7 +233,8 @@ def db_appendRecord(fileName, list):
 
 #region Db Page Logics
 #-----------PAGE LOGICS------------
-#Resolution of 70 spaces
+#Page resolution is set as 70
+
 def db_displayFoodRecord(fileName, category):
     '''
     Displays a food category. Has a header based on the category param given.
@@ -312,31 +300,35 @@ def db_addToCart(fileName, foodID, quantity, overwriteQuantity = False): #fileNa
     cart = db_returnList("Cart.txt")
     foundInCart = False
     for i in range(1, len(cart), 1):
+        #Increases food quantity if already in cart
         if cart[i][0] == foodID and overwriteQuantity == False:
             cart[i][3] = str(int(cart[i][3]) + int(quantity))
             foundInCart = True
+        #Used by modify cart to directly overwrite quantity value
         elif cart[i][0] == foodID and overwriteQuantity == True:
             cart[i][3] = str(quantity)
             foundInCart = True
 
-    # Add into existing cart
+    # Write the new details into cart.txt if item already in cart
     if foundInCart:
         with open("Cart.txt", "w") as file:
             lineCount = 0
             for line in cart:
-                print(line)
-
                 lineCount += 1
                 if lineCount == 1:
                     file.write(line[0]+"\n")
                 else:
-                    if int(line[3]) == 0: #If quantity is 0 then do not write
+                    # If quantity is 0 then do not write. Removes it from cart
+                    if int(line[3]) == 0:
                         continue
                     file.write(f"{line[0]};{line[1]};{line[2]};{line[3]}\n")
         return True
 
-    if fileName == None: #If fileName is None (for when adding to existing cart only)
+    #Stops the function when it is called by modify cart to modify item quantity only.
+    if fileName == None:
         return False
+
+    #Add new item into cart if not in cart yet
     itemDetail = db_searchRecord(fileName, foodID, True)
     if itemDetail != False:
         itemDetail.append(str(quantity))
@@ -372,7 +364,16 @@ All pages are displayed in a consistent format:
 - Content
 - Buttons 
 - User input decision
+------------------------------
+Pages are split into 6 sections:
+1. Customer Page
+2. Admin Page
+3. Guest Page
+4. Register and Login Page
+5. Exit and Main Page
+6. Program Start
 '''
+#region Customer Page
 def pg_custOrderHistory():
     while True:
         clearConsole()
@@ -450,7 +451,7 @@ def pg_cartCheckout():
 
             #Pay
             db_cartCheckout(totalPrice, address,totalQuantity)
-            u_popup("ORDERED SUCESSFULLY")
+            u_popup("ORDERED SUCCESSFULLY")
             break
         elif decision == "BACK":
             break
@@ -458,8 +459,6 @@ def pg_cartCheckout():
             continue
         else:
             u_popup("INVALID INPUT DECISION",1.5)
-
-
 
 def pg_cartModify():
     while True:
@@ -482,7 +481,7 @@ def pg_cartModify():
             break
         try:
             quantity = input("Quantity: ").upper()
-            if inputID == "BACK":
+            if quantity == "BACK":
                 break
             quantity = int(quantity)
         except:
@@ -495,7 +494,6 @@ def pg_cartModify():
         else:
             u_popup("ITEM MODIFIED SUCCESSFULLY",1.5)
             break
-
 
 def pg_cart():
     while True:
@@ -597,7 +595,6 @@ def pg_custMenuCategory():
         else:
             u_popup("INVALID INPUT DECISION",1.5)
 
-
 def pg_custMain():
     while True:
         clearConsole()
@@ -623,7 +620,9 @@ def pg_custMain():
         else:
             u_popup("[ERROR] INVALID INPUT DECISION",1.5)
 
-# region pg_adminAdd()
+#endregion
+
+#region Admin Page
 def pg_adminAdd3(cat_name_price):
     while True:
         clearConsole()
@@ -654,7 +653,6 @@ def pg_adminAdd3(cat_name_price):
         else:
             u_popup("Please enter a proper value")
             continue
-
 
 def pg_adminAdd2(category):
     '''
@@ -721,10 +719,6 @@ def pg_adminAdd1():
 
         pg_adminAdd2(selected_cat)
 
-
-# endregion
-
-# region pg_adminModify()
 def pg_adminModify3(cat_list, foodidx, uinput_modifiedname, checked_price, category):
     '''
     Confirm the modification to item page
@@ -898,10 +892,6 @@ def pg_adminModify1():
             u_popup("[ERROR] Food ID invalid")
             continue
 
-
-# endregion
-
-# region pg_adminDisplay()
 def pg_adminDisplay():
     while True:
         clearConsole()
@@ -987,9 +977,6 @@ def pg_adminDisplay():
             u_popup("Please insert a proper value")
             continue
 
-# endregion
-
-# region pg_adminSearch()
 def pg_adminSearch_order():
     while True:
         clearConsole()
@@ -1026,7 +1013,6 @@ def pg_adminSearch_order():
         elif uinput_selection.upper() == "BACK":
             break
 
-
 def pg_adminSearch_payment():
     while True:
         clearConsole()
@@ -1061,7 +1047,6 @@ def pg_adminSearch_payment():
         else:
             u_popup("[ERROR] input proper value")
 
-
 def pg_adminSearch():
     while True:
         clearConsole()
@@ -1082,11 +1067,6 @@ def pg_adminSearch():
             u_popup("[ERROR] Please input proper value")
             continue
 
-
-
-# endregion
-
-# region pg_adminMain()
 def pg_adminMain():
     while True:
         clearConsole()
@@ -1114,11 +1094,9 @@ def pg_adminMain():
             u_popup("Please insert a proper value")
             continue
 
+#endregion
 
-# endregion
-
-
-# region pg_guess():
+#region Guest Page
 def pg_guest():
     while True:
         clearConsole()
@@ -1138,11 +1116,9 @@ def pg_guest():
         else:
             u_popup("[ERROR] input proper value")
             continue
+#endregion
 
-# endregion
-
-
-
+#region Register and Login Page
 def pg_register():
     while True:
         clearConsole()
@@ -1211,6 +1187,9 @@ def pg_login():
             clearConsole()
             u_popup('[ERROR] INCORRECT USERNAME OR PASSWORD', 1.5)
             break
+#endregion
+
+#region Exit and Main Page
 def pg_exit():
     clearConsole()
     u_popup("THANK YOU FOR USING OUR SERVICE")
@@ -1239,7 +1218,10 @@ def pg_main():
 
 # endregion
 
+#region Program Start
 #PROGRAM STARTS HERE
 
 setupDB()
 pg_main()
+#endregion
+#endregion
