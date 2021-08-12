@@ -8,3 +8,4 @@
 000008;HiAmJunMing;103.50;Jalan Millionaire;04/08/2021, 21:31;9;B006>Yomee Rice Yogurt>11.50>9
 000009;Tony Stank;48.93;No3, Sungai Tanjung Rambutan;07/08/2021, 17:10;3;L004>Nasi Ayam Spiderman>17.99>2;W005>WcChicken Burger>12.95>1
 000010;Tony Stank;12.50;No3, Sungai Tanjung Rambutan;07/08/2021, 17:13;1;L001>Nasi Lemak>12.50>1
+000011;Pikachud;29.49;Jalan Permaisuri Ketiga, KL City;10/08/2021, 14:52;2;L004>Nasi Ayam Spiderman>17.99>1;B006>Yomee Rice Yogurt>11.50>1

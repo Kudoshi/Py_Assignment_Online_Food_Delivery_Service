@@ -29,13 +29,16 @@ def clearConsole():
     Clear console. Only works on terminal.
     Else it will next line to simulate clear
     '''
-    print('\n'*200)
-    time.sleep(0.1)
-    cmd = "clear"
-    if os.name in ('dos', 'nt'):
-        cmd = "cls cmd"
+    print('\n'*200) #Due to errors in the pycharm output window. So just in case
+    time.sleep(0.1) #Someimtes will have error with the display. So sleep the time for awhile for display to load or sometihng
 
-    os.system(cmd)
+    cmd = "clear" #dfault value - WIndows defualt clear cmd
+    if os.name in ('dos', 'nt'): #if your os name is mac or linux
+        cmd = "cls cmd" #change the cmd to this <-- cz linux or mac might cls cmd
+
+        #WIndows clear cmd - clear, linux/mac - cls cmd
+
+    os.system(cmd) #call clear cmd
     time.sleep(0.1)
     print("="*70)
 
@@ -304,6 +307,7 @@ def db_addToCart(fileName, foodID, quantity, overwriteQuantity = False): #fileNa
         if cart[i][0] == foodID and overwriteQuantity == False:
             cart[i][3] = str(int(cart[i][3]) + int(quantity))
             foundInCart = True
+
         #Used by modify cart to directly overwrite quantity value
         elif cart[i][0] == foodID and overwriteQuantity == True:
             cart[i][3] = str(quantity)
@@ -689,7 +693,6 @@ def pg_adminAdd2(category):
 def pg_adminAdd1():
     '''
     Select food category to add page
-    :return:
     '''
     while True:
         clearConsole()
@@ -753,6 +756,9 @@ def pg_adminModify3(cat_list, foodidx, uinput_modifiedname, checked_price, categ
             u_popup("Please enter a proper value")
 
 def pg_adminModify(cat_list, foodidx,category):
+    '''
+    Confirm to modify food item
+    '''
     while True:
         clearConsole()
         u_insertHeader(f"MODIFY {cat_list[foodidx][1]}")
@@ -786,6 +792,9 @@ def pg_adminModify(cat_list, foodidx,category):
             break
 
 def pg_adminDelete(cat_list, foodidx, category):
+    '''
+    Delete selected food item and confirm to delete
+    '''
     while True:
         clearConsole()
         print("\n" + f"Confirm to delete '{cat_list[foodidx][1]}'".center(70, " "))
@@ -812,7 +821,7 @@ def pg_adminDelete(cat_list, foodidx, category):
 
 def pg_adminModify2(category, foodid):
     '''
-    Insert new name and new price page
+    Ask user whether to modify or delete the food item
     '''
     while True:
         clearConsole()
@@ -861,7 +870,7 @@ def pg_adminModify2(category, foodid):
 
 def pg_adminModify1():
     '''
-    Display all records of food item that can be modified
+    Display all records of food item that can be modified and ask for food id to be modifeied
     '''
     while True:
         clearConsole()
@@ -953,7 +962,7 @@ def pg_adminDisplay():
 
         elif uinput_display == "4":
             clearConsole()
-            u_insertHeader("ORDER LIST", False)
+            u_insertHeader("PAYMENT LIST", False)
             print("\n")
             paymentlist = []
             with open("order.txt", "r") as readOrder:
@@ -1012,6 +1021,10 @@ def pg_adminSearch_order():
             continue
         elif uinput_selection.upper() == "BACK":
             break
+        else:
+            u_popup("INSERT PROPER VALUE", 1.5)
+            continue
+
 
 def pg_adminSearch_payment():
     while True:
