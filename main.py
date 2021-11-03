@@ -1233,8 +1233,17 @@ def pg_main():
 
 #region Program Start
 #PROGRAM STARTS HERE
+clearConsole()
 
 setupDB()
 pg_main()
+
+# u_constructButton(3, [["RETURN", "Return"],["HOME","To Home"],["PAY","Payment"],["HELLO","Hello to you"],["ADDRESS", "Address"]])
+
+
+
+
+
+
 #endregion
 #endregion
