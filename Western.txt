@@ -1,5 +1,8 @@
-W001;Chicken Chop;11
-W002;Spaggethi Sauce;10
-W003;Bolognese pasta;9
-W004;Hamburger Cheese Tard;6
-W005;Poison Ivy;5
+W001;Chicken Chop;15.50
+W002;Fish And Chip;16.99
+W003;Spaghetti Carbonara;13.45
+W004;England Big Breakfast;16.99
+W005;WcChicken Burger;12.95
+W006;Burger Queen Deluxe;14.55
+W007;5 Fingers Fried Chicken;18.99
+W008;Donimo Tuna Temptation Pizza;25.99

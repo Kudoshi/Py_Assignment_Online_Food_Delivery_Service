@@ -1,4 +1,7 @@
-L001;Nasi Goreng Kampung Kimchi;10
-L002;Mee Goreng Mamak Hebat;11
-L003;Golden crispy chicken rendang;13
-L004;Meat loafed in a nutshell;15
+L001;Nasi Lemak;12.50
+L002;Roti Canai;5.50
+L003;Nasi Goreng Kampung;14.99
+L004;Nasi Ayam Spiderman;17.99
+L005;Fried Bee Hoon;14.99
+L006;Char Kuey Teow;14.25
+L007;Tosai;5.00

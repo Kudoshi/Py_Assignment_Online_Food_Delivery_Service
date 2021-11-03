@@ -1,4 +1,8 @@
-D001;Ayamas;25
-D002;Ice Scream;2
-D003;Ice Kacang;5
-D004;Magnus Olibois;4
+D001;Nyonya Kueh Set;7.50
+D002;Currypuff;3.50
+D003;Popiah;4.50
+D004;Vegetarian Shark Fin Soup;18.99
+D005;Sushi Prince Set;16.50
+D006;PublikaRecipe Chocolate Cake;15.55
+D007;Mekkdi Fries;7.99
+D008;Malaysian Tau Fu Fah;6.99

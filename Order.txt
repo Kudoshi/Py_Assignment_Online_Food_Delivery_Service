@@ -1,0 +1,11 @@
+000001;HongWei;555.31;Taman Segar Perdana;04/08/2021, 21:12;69;W007>5 Fingers Fried Chicken>18.99>4;W008>Donimo Tuna Temptation Pizza>25.99>5;B008>Mountain Ice Milo Dinosaur>9.99>10;B005>Sky Juice>4.99>50
+000002;Kudoshi;77.91;No 3, Tanjung Rambutan;04/08/2021, 21:15;7;L001>Nasi Lemak>12.50>2;W005>WcChicken Burger>12.95>1;D007>Mekkdi Fries>7.99>2;B003>Moonbuck Coffee>17.99>1;B007>Milo Beng>5.99>1
+000003;yin;36.00;miharja;04/08/2021, 21:20;4;L001>Nasi Lemak>12.50>2;L002>Roti Canai>5.50>2
+000004;Bright;15.99;Jalan Hati Awak;04/08/2021, 21:22;3;D008>Malaysian Tau Fu Fah>6.99>1;D003>Popiah>4.50>2
+000005;HiAmJunMing;4985.01;Jalan Millionaire;04/08/2021, 21:25;999;B005>Sky Juice>4.99>999
+000006;HiAmJunMing;734.65;Jalan Millionaire;04/08/2021, 21:26;35;D004>Vegetarian Shark Fin Soup>18.99>25;W008>Donimo Tuna Temptation Pizza>25.99>10
+000007;Pikachud;36.45;Jalan Kanto;04/08/2021, 21:28;3;W003>Spaghetti Carbonara>13.45>1;D006>PublikaRecipe Chocolate Cake>15.55>1;B002>TeaLeaf Boba Tea>7.45>1
+000008;HiAmJunMing;103.50;Jalan Millionaire;04/08/2021, 21:31;9;B006>Yomee Rice Yogurt>11.50>9
+000009;Tony Stank;48.93;No3, Sungai Tanjung Rambutan;07/08/2021, 17:10;3;L004>Nasi Ayam Spiderman>17.99>2;W005>WcChicken Burger>12.95>1
+000010;Tony Stank;12.50;No3, Sungai Tanjung Rambutan;07/08/2021, 17:13;1;L001>Nasi Lemak>12.50>1
+000011;Pikachud;29.49;Jalan Permaisuri Ketiga, KL City;10/08/2021, 14:52;2;L004>Nasi Ayam Spiderman>17.99>1;B006>Yomee Rice Yogurt>11.50>1

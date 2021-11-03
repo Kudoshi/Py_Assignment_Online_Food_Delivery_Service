@@ -1,4 +1,9 @@
-B001;Beverage1;25
-B002;Beverage2;69
-B003;Nasi Lemak;25
-B005;Hebat hebat tay tay;5
+B001;Teh Tarik;3.99
+B002;TeaLeaf Boba Tea;7.45
+B003;Moonbuck Coffee;17.99
+B004;Bepsi Cola;5.00
+B005;Sky Juice;4.99
+B006;Yomee Rice Yogurt;11.50
+B007;Milo Beng;5.99
+B008;Mountain Ice Milo Dinosaur;9.99
+B009;Teh O' Ais Limau;4.99
